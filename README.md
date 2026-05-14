@@ -1,10 +1,25 @@
 # codex-telegram-remote
 
-Control Codex from Telegram through Hermes.
+Hermes-native Codex control from Telegram.
 
-`codex-telegram-remote` is a Hermes plugin that exposes a `/codex` Telegram command. It can list and read Codex threads, start or resume work, steer a running turn, relay approval requests to Telegram, and send completion summaries back to the same chat.
+`codex-telegram-remote` is a lightweight Hermes plugin that exposes a `/codex` Telegram command. It lets you list and read Codex threads, start or resume work, steer a running turn, relay approval requests, and receive completion summaries from the same Telegram chat you already use for Hermes.
 
-This repo is for people who already run Hermes with a Telegram bot and want phone-based control over Codex.
+This is not another standalone Telegram bot server. It is for people who already run Hermes, already trust Hermes as their messaging gateway, and want Codex phone control without adding a second bot runtime.
+
+## Why This Exists
+
+There are good open-source Telegram bridges for Codex and other coding agents. Most of them are separate runtimes: they run their own Telegram bot process, manage their own sessions, and duplicate pieces of the messaging stack you already configured in Hermes.
+
+This project takes a narrower path:
+
+- Hermes-native: installs as a Hermes plugin and reuses Hermes Telegram routing.
+- No second bot server: no extra long-polling daemon, webhook service, tunnel, or bot token manager.
+- Codex app-server based: talks to Codex through `codex app-server` instead of scraping a terminal or injecting keystrokes into tmux.
+- Existing Codex threads: works with Codex app-server thread APIs instead of creating an unrelated chat-only session store.
+- Telegram approval routing: sends Codex approval requests back to the active Hermes Telegram chat/thread.
+- Small audit surface: a compact Python plugin with local JSON state and no hosted service.
+
+If you want a full multi-agent command center, use a broader tool. If you want Hermes to become the phone interface for Codex, this plugin is the direct fit.
 
 ## What It Does
 
@@ -13,6 +28,17 @@ This repo is for people who already run Hermes with a Telegram bot and want phon
 - Registers a Hermes `/codex` command.
 - Routes Codex approvals back to Telegram with approve, deny, cancel, session, and always options.
 - Stores only local runtime routing state under `.state/`, which is ignored by git.
+
+## How It Compares
+
+| Project type | Good for | Tradeoff |
+|---|---|---|
+| `codex-telegram-remote` | Hermes users who want `/codex` inside existing Telegram setup | Requires Hermes; intentionally narrow |
+| Standalone Codex Telegram bots | Users who want a dedicated Codex bot without Hermes | Adds another bot process and session layer |
+| tmux bridges | Users who want terminal-first control over many CLI agents | Depends on terminal/tmux state, not Codex app-server APIs |
+| Multi-agent gateways | Teams wanting Telegram/Discord/Slack plus many agents | Larger install and operational surface |
+
+Known adjacent open-source projects include [OpenACP](https://github.com/Open-ACP/OpenACP), [HeyAgent](https://github.com/gergomiklos/heyagent), [TeleCodex](https://github.com/benedict2310/telecodex), [CodexClaw](https://github.com/MackDing/CodexClaw), [CCGram](https://github.com/alexei-led/ccgram), and [openclaw-codex-app-server](https://github.com/pwrdrvr/openclaw-codex-app-server). They validate the category. This repo competes by being the Hermes-native, app-server-first option.
 
 ## Requirements
 
@@ -239,6 +265,8 @@ This repo intentionally does not commit `.state/`, sockets, caches, or IDE files
 ## Security
 
 This plugin can approve local Codex actions from Telegram. Treat Telegram account access and bot access as privileged. Review approval messages carefully before using `/codex always`.
+
+The security boundary is intentionally simple: anyone who can command your configured Hermes Telegram session may be able to steer or approve Codex work. Keep Hermes pairing, Telegram bot membership, and Codex approval policy locked down.
 
 Report security issues privately; see [SECURITY.md](SECURITY.md).
 
