@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from .codex_remote.bridge import get_bridge
+try:
+    from .codex_remote.bridge import get_bridge
+except ImportError:
+    from codex_remote.bridge import get_bridge
 
 
 def _handle_codex(raw_args: str) -> str:
