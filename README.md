@@ -17,7 +17,8 @@ This repo is for people who already run Hermes with a Telegram bot and want phon
 ## Requirements
 
 - macOS or Linux with Python 3.11+.
-- Hermes with Telegram bot support already configured.
+- Hermes installed and running. Follow the original [Hermes Agent repo](https://github.com/NousResearch/hermes-agent) for the base setup.
+- Hermes Telegram messaging configured according to the official [Hermes Telegram guide](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram).
 - Codex CLI installed and available as `codex`.
 - Codex CLI support for `codex app-server`.
 - Hermes runtime modules available to plugins:
