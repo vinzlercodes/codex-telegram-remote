@@ -1,0 +1,7 @@
+name: codex_remote
+version: 0.1.0
+description: "Hermes Telegram command bridge for remote Codex thread control and approval routing."
+author: "codex-telegram-remote contributors"
+kind: standalone
+provides_tools:
+  - codex_remote
